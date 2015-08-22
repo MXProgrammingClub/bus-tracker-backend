@@ -1,7 +1,9 @@
 import os
 import gps
 import socket     
-    
+
+BUFFER_SIZE = 3    
+
 def main():
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	s.bind(("0.0.0.0", 8787))
@@ -18,7 +20,7 @@ def main():
 		
 def returnLatLong((client, addr)):	#Wait for someone to ask for a lat/long pair, then returh getLatLong
 	client.send(getLatLong())
-
+	
 def getLatLong():     
 	# Listen on port 2947 (gpsd) of localhost
 	session = gps.gps("localhost", "2947")
