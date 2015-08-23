@@ -1,5 +1,3 @@
 #!/bin/bash			#passwd *PASSWORD*
-./sliminstall.sh
 sudo apt-get install gpsd gpsd-clients python-gps
-sudo gpsd /dev/ttyUSB0 -F /var/run/gpsd.sock 		#/dev/ttyUSB0 is name of gps reciever
-	#Test with "cgps -s"
+#Test with "cgps -s"
