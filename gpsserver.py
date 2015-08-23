@@ -2,9 +2,9 @@ import os
 import gps
 import socket     
 
-BUFFER_SIZE = 3    
-
 def main():
+	os.system("sudo killall gpsd")
+	os.system("sudo gpsd /dev/ttyUSB0 -F /var/run/gpsd.sock")
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	s.bind(("0.0.0.0", 8787))
 	s.listen(100)
