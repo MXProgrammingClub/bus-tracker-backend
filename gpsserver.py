@@ -2,6 +2,7 @@ import os
 import threading
 import gps
 import socket     
+import time
 
 def listen():
 	
@@ -32,9 +33,10 @@ def setLatLong():
     			if report['class'] == 'TPV':
 				if hasattr(report, 'lat') and hasattr(report, 'lon'):
 					data =  "LATITIUDE = " + repr(report.lat) + "\nLONGITUDE = " + repr(report.lon)
+					print data
   	   	except KeyError:
     			pass
-
+		
 data = "LAT = 00.00000\nLON = 00.00000"
 os.system("sudo killall gpsd")
 os.system("sudo gpsd /dev/ttyUSB0 -F /var/run/gpsd.sock")
