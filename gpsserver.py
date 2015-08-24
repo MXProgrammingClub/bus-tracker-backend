@@ -1,4 +1,5 @@
 import os
+import threading
 import gps
 import socket     
 
@@ -21,22 +22,24 @@ def returnLatLong((client, addr)):	#Wait for someone to ask for a lat/long pair,
 	client.send(data)
 	
 def setLatLong():     
-	os.system("sudo killall gpsd")
-	os.system("sudo gpsd /dev/ttyUSB0 -F /var/run/gpsd.sock")	
 	# Listen on port 2947 (gpsd) of localhost
 	session = gps.gps("localhost", "2947")
         session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)
+	global data
 	while True:
    		try:
      			report = session.next()
     			if report['class'] == 'TPV':
 				if hasattr(report, 'lat') and hasattr(report, 'lon'):
-					data = "LATITIUDE = " + repr(report.lat) + "\nLONGITUDE = " + repr(report.lon)
+					data =  "LATITIUDE = " + repr(report.lat) + "\nLONGITUDE = " + repr(report.lon)
   	   	except KeyError:
     			pass
 
-str data
-if os.fork():
-	setLatLong()
-else:
-	listen()
+data = "LAT = 00.00000\nLON = 00.00000"
+os.system("sudo killall gpsd")
+os.system("sudo gpsd /dev/ttyUSB0 -F /var/run/gpsd.sock")
+
+thread = threading.Thread(target=setLatLong)
+thread.daemon = True                            # Daemonize thread
+thread.start() 
+listen()
