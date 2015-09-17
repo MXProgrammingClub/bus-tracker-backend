@@ -2,7 +2,8 @@ import os
 import threading
 import gps
 import socket     
-import time
+
+PASS="TEST"
 
 def listen():	
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #Create a TCPIP socket
@@ -19,7 +20,10 @@ def listen():
 			exit(0) #Kill child process
 		
 def returnLatLong((client, addr)):	#Handle open socket
-	client.send(data)
+	global PASS;
+	passWd = client.recv(16);
+	if(passWd == PASS): 
+		client.send(data);
 	
 def setLatLong():     
 	# Listen on port 2947 (gpsd) of localhost
