@@ -20,11 +20,15 @@ def listen():
 			exit(0) #Kill child process
 		
 def returnLatLong((client, addr)):	#Handle open socket
-	global PASS;
-	passWd = client.recv(16);
-	if(passWd == PASS): 
+	if(verifyEncryption((client, addr))): 
 		client.send(data);
 	
+def verifyEncryption((client, addr)):
+	global PASS;
+	passWd = client.recv(16);	
+	if(passWd == PASS): 
+		return True;
+
 def setLatLong():     
 	# Listen on port 2947 (gpsd) of localhost
 	session = gps.gps("localhost", "2947") #Connect to gpsd on port 2947
