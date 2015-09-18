@@ -2,7 +2,6 @@ import socket
 import random
 
 RANDOM_SEED="TEST"
-PASS="TEST";
 def Decrypt(data):
 	global RANDOM_SEED;
 	random.seed(RANDOM_SEED);
@@ -15,6 +14,5 @@ print "Enter the server address to connect to!"
 ip = raw_input()
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind(("0.0.0.0",63541))
-s.connect((ip, 8787))
-#s.send(PASS);
+s.connect((ip, 8789))
 print Decrypt(s.recv(64))

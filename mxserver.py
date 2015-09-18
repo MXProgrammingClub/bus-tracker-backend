@@ -7,28 +7,20 @@ def getData():
 	global raspIP;
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	s.bind(("0.0.0.0",63542))
-	s.connect((raspIP, 8787))
+	
 	while True:
+		s.connect((raspIP, 8787))		
 		data = s.recv(64);
+		s.close();		
 
 
 def returnLatLong((client, addr)):	#Handle open socket
 	global data;
-	#if(verifyEncryption((client, addr))): 
 	client.send(data);
-	
-def verifyEncryption((client, addr)):
-	global PASS;
-	passWd = client.recv(16);	
-	if(passWd == PASS): 
-		return True;
 
-
-
-
-data = "LAT = 00.00000\nLON = 00.00000" #Global var
+data = "LAT = 00.00000NOTSERV\nLON = 00.00000" #Global var
 raspIP = "127.0.0.1"
-PASS = "TEST"
+
 
 thread = threading.Thread(target=getData)	#Run setLatLong in a subthread
 thread.daemon = True                            # Daemonize thread
