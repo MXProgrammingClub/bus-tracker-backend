@@ -3,23 +3,25 @@ import time
 import threading
 import os
 
+NEXT = "NEW"
+KILL = "KIL"
+
 def getData():
 	global data;
 	global raspIP;
-	
+	global NEXT;	
+	global KILL
+
 	port = 63542;
+	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	s.bind(("0.0.0.0",port))		
+	s.connect((raspIP, 8787))		
 	while True:
-		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		s.bind(("0.0.0.0",port))		
-		s.connect((raspIP, 8787))		
 		data = s.recv(64);
-		s.shutdown(socket.SHUT_RDWR);		
-		s.close();
-		port= port+1;
-		if(port>63598):
-			port = port%100;
 		print data;		
+		s.send(NEXT)
 		time.sleep(5)
+		
 
 def returnLatLong((client, addr)):	#Handle open socket
 	global data;

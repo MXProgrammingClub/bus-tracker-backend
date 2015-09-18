@@ -5,6 +5,8 @@ import socket
 import random
 
 RANDOM_SEED="TEST"
+NEXT="NEW"
+KILL="KIL"
 
 def listen():	
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #Create a TCPIP socket
@@ -21,8 +23,14 @@ def listen():
 			exit(0) #Kill child process
 		
 def returnLatLong((client, addr)):	#Handle open socket
+	global NEXT
+	global KILL
 	client.send(Encrypt(data));
-	
+	cdat = "";
+	while cdat!=KILL:
+		if cdat==NEXT:
+			client.send(Encrypt(data))
+		cdat = client.recv(3);
 def Encrypt(data):
 	global RANDOM_SEED;
 	random.seed(RANDOM_SEED);
