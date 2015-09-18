@@ -30,7 +30,7 @@ def Encrypt(data):
 	crypt = "";
 
 	for x in range(0, len(data)):
-		crypt += "" + chr(ord(data[x])+ random.randint(0,100))	
+		crypt += "" + chr(ord(data[x])+ random.randint(0,170))	
 	return crypt;
 
 def setLatLong():     
