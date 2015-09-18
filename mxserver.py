@@ -8,11 +8,14 @@ def getData():
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	s.bind(("0.0.0.0",63542))
 	s.connect((raspIP, 8787))
+	while True:
+		data = s.recv(64);
 
 
 def returnLatLong((client, addr)):	#Handle open socket
-	if(verifyEncryption((client, addr))): 
-		client.send(data);
+	global data;
+	#if(verifyEncryption((client, addr))): 
+	client.send(data);
 	
 def verifyEncryption((client, addr)):
 	global PASS;

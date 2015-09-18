@@ -2,8 +2,9 @@ import os
 import threading
 import gps
 import socket     
+import random
 
-PASS="TEST"
+RANDOM_SEED="TEST"
 
 def listen():	
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #Create a TCPIP socket
@@ -20,14 +21,17 @@ def listen():
 			exit(0) #Kill child process
 		
 def returnLatLong((client, addr)):	#Handle open socket
-	if(verifyEncryption((client, addr))): 
-		client.send(data);
+	client.send(Encrypt(data));
 	
-def verifyEncryption((client, addr)):
-	global PASS;
-	passWd = client.recv(16);	
-	if(passWd == PASS): 
-		return True;
+def Encrypt(data):
+	global RANDOM_SEED;
+	random.seed(RANDOM_SEED);
+	
+	crypt = "";
+
+	for x in range(0, len(data)):
+		crypt += "" + chr(ord(data[x])+ random.randint(0,100))	
+	return crypt;
 
 def setLatLong():     
 	# Listen on port 2947 (gpsd) of localhost
