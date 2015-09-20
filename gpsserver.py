@@ -7,21 +7,18 @@ import random
 RANDOM_SEED="TEST"
 NEXT="NEW"
 KILL="KIL"
-SERVER_IP="127.0.0.1"
+SERVER_IP="192.168.1.187"
 
 def connectToServer():	
 	global NEXT
 	global KILL	
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #Create a TCPIP socket
-	s.bind(("0.0.0.0", 63459)) #Bind to all interfaces on port 8787
+	s.bind(("0.0.0.0", 63469)) #Bind to all interfaces on port 8787
 	s.connect((SERVER_IP, 8787));
 	
 	s.send(Encrypt(data));
-	cdat = "";
-	while cdat!=KILL:
-		if cdat==NEXT:
-			s.send(Encrypt(data))
-		cdat = s.recv(3);
+	while True:
+		s.send(Encrypt(data))
 def Encrypt(data):
 	global RANDOM_SEED;
 	random.seed(RANDOM_SEED);
@@ -29,7 +26,8 @@ def Encrypt(data):
 	crypt = "";
 
 	for x in range(0, len(data)):
-		crypt += "" + chr(ord(data[x])+ random.randint(0,100))	
+		seed = random.randint(0,100);
+		crypt += "" + chr(ord(data[x])+ seed)	
 	return crypt;
 
 def setLatLong():     
