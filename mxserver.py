@@ -28,7 +28,7 @@ def returnLatLong((client, addr)):	#Handle open socket
 	client.send(data);
 
 data = "LAT = 00.00000NOTSERV\nLON = 00.00000" #Global var
-raspIP = "127.0.0.1"
+raspIP = "192.168.1.152"
 
 
 thread = threading.Thread(target=getData)	#Run setLatLong in a subthread
