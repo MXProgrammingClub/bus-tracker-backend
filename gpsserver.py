@@ -7,30 +7,21 @@ import random
 RANDOM_SEED="TEST"
 NEXT="NEW"
 KILL="KIL"
+SERVER_IP="127.0.0.1"
 
-def listen():	
-	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #Create a TCPIP socket
-	s.bind(("0.0.0.0", 8787)) #Bind to all interfaces on port 8787
-	s.listen(100) #Accept a maximum of 100 connection simultaneously
-
-	while True:
-	    	c = s.accept()	#Accept a new connection
-    		if os.fork(): #Create child process, if not in child, end
-      			c[0].close()
-    		else:
-      			returnLatLong(c) #Give the new client the Lat/Long pair
-      			c[0].close()
-			exit(0) #Kill child process
-		
-def returnLatLong((client, addr)):	#Handle open socket
+def connectToServer():	
 	global NEXT
-	global KILL
-	client.send(Encrypt(data));
+	global KILL	
+	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #Create a TCPIP socket
+	s.bind(("0.0.0.0", 63459)) #Bind to all interfaces on port 8787
+	s.connect((SERVER_IP, 8787));
+	
+	s.send(Encrypt(data));
 	cdat = "";
 	while cdat!=KILL:
 		if cdat==NEXT:
-			client.send(Encrypt(data))
-		cdat = client.recv(3);
+			s.send(Encrypt(data))
+		cdat = s.recv(3);
 def Encrypt(data):
 	global RANDOM_SEED;
 	random.seed(RANDOM_SEED);
@@ -63,4 +54,4 @@ os.system("sudo gpsd /dev/ttyUSB0 -F /var/run/gpsd.sock") #Start gpsd listening 
 thread = threading.Thread(target=setLatLong)	#Run setLatLong in a subthread
 thread.daemon = True                            # Daemonize thread
 thread.start() 
-listen()
+connectToServer()

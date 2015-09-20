@@ -7,7 +7,11 @@ def Decrypt(data):
 	random.seed(RANDOM_SEED);
 	crypt = "";
 	for x in range(0, len(data)):
-		crypt += "" + chr(ord(data[x])- random.randint(0,170))	
+		seed = random.randint(0,100);
+		print seed;
+		val = ord(data[x])
+		print " VAL = " + repr(val)
+		crypt += "" + chr(val- seed)	
 	return crypt;
 
 print "Enter the server address to connect to!"
