@@ -38,7 +38,7 @@ def Encrypt(data):
 	crypt = "";
 
 	for x in range(0, len(data)):
-		crypt += "" + chr(ord(data[x])+ random.randint(0,170))	
+		crypt += "" + chr(ord(data[x])+ random.randint(0,100))	
 	return crypt;
 
 def setLatLong():     
@@ -51,7 +51,7 @@ def setLatLong():
      			report = session.next() #Grab the next GPS message, if it has the correct data, write it to a global var
     			if report['class'] == 'TPV':
 				if hasattr(report, 'lat') and hasattr(report, 'lon'):
-					data =  "LATITIUDE " + repr(report.lat) + " LONGITUDE " + repr(report.lon)
+					data =  "LAT " + repr(report.lat) + " LON " + repr(report.lon)
 					print data
   	   	except KeyError: #If no message exisists in queue, wait
     			pass
