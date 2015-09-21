@@ -3,11 +3,12 @@ import threading
 import gps
 import socket     
 import random
+import gpsconfig
 
 RANDOM_SEED="TEST"
 NEXT="NEW"
 KILL="KIL"
-SERVER_IP="192.168.1.187"
+SERVER_IP="127.0.0.1"
 
 def connectToServer():	
 	global NEXT
@@ -16,9 +17,9 @@ def connectToServer():
 	s.bind(("0.0.0.0", 63469)) #Bind to all interfaces on port 8787
 	s.connect((SERVER_IP, 8787));
 	
-	s.send(Encrypt(data));
+	s.send(Encrypt(gpsconfig.data));
 	while True:
-		s.send(Encrypt(data))
+		s.send(Encrypt(gpsconfig.data))
 def Encrypt(data):
 	global RANDOM_SEED;
 	random.seed(RANDOM_SEED);
@@ -40,9 +41,8 @@ def setLatLong():
      			report = session.next() #Grab the next GPS message, if it has the correct data, write it to a global var
     			if report['class'] == 'TPV':
 				if hasattr(report, 'lat') and hasattr(report, 'lon'):
-					data =  "LAT " + repr(report.lat) + " LON " + repr(report.lon)
-					print data
-  	   	except KeyError: #If no message exisists in queue, wait
+					gpsconfig.data =  "LAT " + repr(report.lat) + " LON " + repr(report.lon)
+		except KeyError: #If no message exisists in queue, wait
     			pass
 		
 data = "LAT = 00.00000\nLON = 00.00000" #Global var
