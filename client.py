@@ -8,15 +8,13 @@ def Decrypt(data):
 	crypt = "";
 	for x in range(0, len(data)):
 		seed = random.randint(0,100);
-		print seed;
 		val = ord(data[x])
-		print " VAL = " + repr(val)
 		crypt += "" + chr(val- seed)	
 	return crypt;
 
 print "Enter the server address to connect to!"
 ip = raw_input()
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.bind(("0.0.0.0",63541))
+s.bind(("0.0.0.0",63540))
 s.connect((ip, 8789))
 print Decrypt(s.recv(64))

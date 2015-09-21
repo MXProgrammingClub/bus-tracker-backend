@@ -43,6 +43,7 @@ def returnLatLong((client, addr)):	#Handle open socket
 	global dataObj;	
 	print dataObj.data
 	client.send(dataObj.data);
+	c.close();
 
 dataObj = Data();
 thread.start_new_thread( collectData, ())
