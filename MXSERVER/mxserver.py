@@ -5,10 +5,6 @@ import os
 
 
 class Data:
-	def setData(newData):
-		data = newData;
-	def getData():
-		return data;
 	data = "NOTSET"
 
 def collectData():
@@ -43,10 +39,8 @@ def returnLatLong((client, addr)):	#Handle open socket
 	global dataObj;	
 	print dataObj.data
 	client.send(dataObj.data);
-	c.close();
+	client.close();
 
 dataObj = Data();
 thread.start_new_thread( collectData, ())
-thread.start_new_thread( serveClients, ())
-while True:
-	time.sleep(5);
+serveClients();

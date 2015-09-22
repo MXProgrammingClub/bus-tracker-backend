@@ -15,6 +15,6 @@ def Decrypt(data):
 print "Enter the server address to connect to!"
 ip = raw_input()
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.bind(("0.0.0.0",63540))
+s.bind(("0.0.0.0",63541))
 s.connect((ip, 8789))
 print Decrypt(s.recv(64))

@@ -11,15 +11,9 @@ KILL="KIL"
 SERVER_IP="127.0.0.1"
 
 class Data:
-	def setData(newData):
-		data = newData;
-	def getData():
-		return data;
 	data = "NOTSET"
 
 def connectToServer():	
-	global NEXT
-	global KILL
 	global dataObj	
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #Create a TCPIP socket
 	s.bind(("0.0.0.0", 63467)) #Bind to all interfaces on port 8787
@@ -46,7 +40,6 @@ def setLatLong():
 	# Listen on port 2947 (gpsd) of localhost
 	session = gps.gps("localhost", "2947") #Connect to gpsd on port 2947
         session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)	#Stream the gps data
-	global data
 	dataObj.data = "GPS DAEMON RUNNING";
 	while True:	#Constantly update global var with Lat/Long
    		try:
