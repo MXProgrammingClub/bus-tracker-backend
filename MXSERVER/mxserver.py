@@ -1,6 +1,6 @@
 import socket
 import time
-import thread
+import _thread
 import os
 
 
@@ -14,14 +14,15 @@ def collectData():
 	s.listen(100) #Accept a maximum of 100 connection simultaneously
 	while True:	    	
 		c = s.accept()	#Accept a new connection
-		thread.start_new_thread( setDataWithClient, (c,))	    		
+		_thread.start_new_thread( setDataWithClient, (c,))	    		
 		
 
-def setDataWithClient((client,addr)):
+def setDataWithClient(sock):
+	(client,addr) = sock;
 	global dataObj	
 	while True:
 		dataObj.data = client.recv(64);		
-		print dataObj.data;
+		print( dataObj.data);
 		time.sleep(5);	
 
 def serveClients():
@@ -31,16 +32,17 @@ def serveClients():
 	s.listen(100) #Accept a maximum of 100 connection simultaneously
 	while True: 	
 		c = s.accept()	#Accept a new connection
-		print "NEW CLIENT! VALUE OF DATA IS ", dataObj.data;    		
-		thread.start_new_thread( returnLatLong, (c,))		
+		print( "NEW CLIENT! VALUE OF DATA IS ", dataObj.data);    		
+		_thread.start_new_thread( returnLatLong, (c,))		
 		
 
-def returnLatLong((client, addr)):	#Handle open socket
+def returnLatLong(sock):	#Handle open socket
+	(client,addr)=sock;
 	global dataObj;	
-	print dataObj.data
+	print( dataObj.data)
 	client.send(dataObj.data);
 	client.close();
 
 dataObj = Data();
-thread.start_new_thread( collectData, ())
+_thread.start_new_thread( collectData, ())
 serveClients();
