@@ -12,9 +12,9 @@ def Decrypt(data):
 		crypt += "" + chr(val- seed)	
 	return crypt;
 
-print "Enter the server address to connect to!"
-ip = raw_input()
+print( "Enter the server address to connect to!");
+ip = input()
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind(("0.0.0.0",63541))
 s.connect((ip, 8789))
-print Decrypt(s.recv(64))
+print( Decrypt(s.recv(64)))
