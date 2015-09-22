@@ -1,3 +1,4 @@
+#RUN WITH PYTHON 2.7
 import os
 import gps
 import socket     
@@ -39,11 +40,11 @@ def setLatLong():
 	global dataObj;
 	# Listen on port 2947 (gpsd) of localhost
 	session = gps.gps("localhost", "2947") #Connect to gpsd on port 2947
-        session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)	#Stream the gps data
+        session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE);
 	dataObj.data = "GPS DAEMON RUNNING";
 	while True:	#Constantly update global var with Lat/Long
    		try:
-     			report = session.next() #Grab the next GPS message, if it has the correct data, write it to a global var
+     			report = session.next(); #Grab the next GPS message, if it has the correct data, write it to a global var
     			if report['class'] == 'TPV':
 				if hasattr(report, 'lat') and hasattr(report, 'lon'):
 					dataObj.data =  "LAT " + repr(report.lat) + " LON " + repr(report.lon)
