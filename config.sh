@@ -6,3 +6,5 @@ sudo apt-get install python3-pip
 pip install asyncio	
 pip install websockets
 #Test with "cgps -s"
+
+#Obsolete, onlly use for debugging both on the same computer

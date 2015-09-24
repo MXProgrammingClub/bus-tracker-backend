@@ -10,20 +10,31 @@ RANDOM_SEED="TEST"
 NEXT="NEW"
 KILL="KIL"
 SERVER_IP="127.0.0.1"
+USE_CRYPT= False;
 
 class Data:
 	data = "NOTSET"
 
 def connectToServer():	
 	global dataObj	
-	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #Create a TCPIP socket
-	s.bind(("0.0.0.0", 63467)) #Bind to all interfaces on port 8787
-	s.connect((SERVER_IP, 8787));
-	
-	s.send(Encrypt(dataObj.data));
+	while True:
+		try:
+			s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+			s.bind(("0.0.0.0", 63467)) #Bind to all interfaces on port 8787
+			s.connect((SERVER_IP, 8787));
+			validConnec(s);
+		except socket.error:
+			s.close();
+			time.sleep(5)
+
+def validConnec(s):
+	global dataObj;
 	while True:
 		print dataObj.data;		
-		s.send(Encrypt(dataObj.data))
+		if(USE_CRYPT):
+			s.send(Encrypt(dataObj.data))
+		else:
+			s.send(dataObj.data);
 		time.sleep(5)
 def Encrypt(data):
 	global RANDOM_SEED;

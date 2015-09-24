@@ -7,7 +7,8 @@ RANDOM_SEED="TEST";
 def hello():
 	websocket = yield from websockets.connect('ws://localhost:8789/')
 	msg = yield from websocket.recv();
-	print (Decrypt(msg));
+	print(msg);
+	#print (Decrypt(msg));
 
 def Decrypt(data):
         global RANDOM_SEED;

@@ -1,1 +1,5 @@
-Small GPS server using gpsd, sockets and python to allow TCP requests of an RPi's location. Run config.sh to install the needed dependencies, then gpsserver.py in a screen to accept connections; by default the server will listen on port 8787 of all interfaces. Client.py can be pointed at an IP and will attempt to connect to a GPSServer, the port is assumed to be 8787. All code written by Ted Pyne, licensed under the BSD 3 clause license. Data is encrypted using python's mersenne prime prng, where the seed ust be consistent between all servers and clients.
+System for GPS tracking using pythonn and websockets.
+By Ted Pyne, Licensed under BSD 3 clause.
+3 part system for moving GPS Lat/Long data between mobile trackers (tested on RPi), a central server (tested on Ubuntu server 14.04), and clients (currently tested on linux Mint 17.2).
+/GPSSERVER contains the setup scripts and tracker to run.
+/MXSERVER contsains the setup scripts and server to run.
