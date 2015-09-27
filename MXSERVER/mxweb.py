@@ -9,7 +9,7 @@ import os
 
 
 class Data:
-	data = "NOTSET"
+	data = 'NOTSET'
 
 def collectData():
 	global dataObj;	
@@ -25,7 +25,7 @@ def setDataWithClient(sock):
 	(client,addr) = sock;
 	global dataObj	
 	while True:
-		dataObj.data = client.recv(64);		
+		dataObj.data = client.recv(64).decode("utf-8") ;		
 		print( dataObj.data);
 		time.sleep(5);	
 
