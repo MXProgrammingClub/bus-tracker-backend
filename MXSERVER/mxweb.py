@@ -31,6 +31,7 @@ def setDataWithClient(sock):
 
 @asyncio.coroutine
 def serveClient(websocket,path):
+	print("NEW CLIENT!");
 	global dataObj;
 	yield from websocket.send(dataObj.data)
 
