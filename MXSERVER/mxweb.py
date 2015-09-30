@@ -29,7 +29,8 @@ def setDataWithClient(sock):
 		time.sleep(5);	
 
 class TestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
-	def do_POST(self):
+	def do_GET(self):
+		print "CALLED!";
 		global dataObj
 		self.send_response(200)
             	self.send_header('Content-type','text/html')
