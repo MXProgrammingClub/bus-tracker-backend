@@ -31,6 +31,9 @@ def setDataWithClient(sock):
 class TestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 	def do_POST(self):
 		global dataObj
+		self.send_response(200)
+            	self.send_header('Content-type','text/html')
+           	self.end_headers()
 		self.wfile.write(dataObj.data)
 
 def returnLatLong(sock):	#Handle open socket
