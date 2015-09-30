@@ -1,4 +1,3 @@
-#RUN WITH PYTHON 3 FOR WEBSOCK COMPAT
 
 import socket
 import time
