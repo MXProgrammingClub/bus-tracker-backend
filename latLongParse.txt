@@ -1,7 +1,0 @@
-L1, L2 (reported lat,long)
-K1, K2 (bottom corner of map)
-S1, S2 (top corner of map)
-
-P1, P2 (Dimensions of screen)
-
-((L-K)/(S-K))P=Location on screen
