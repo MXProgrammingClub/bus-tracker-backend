@@ -6,7 +6,7 @@ import BaseHTTPServer
 import SimpleHTTPServer
 
 class Data:
-	data = 'NOTSET'
+	data = "require('update')([lat,lon]);"
 
 def collectData():
 	global dataObj;	
