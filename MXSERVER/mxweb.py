@@ -13,7 +13,7 @@ def collectData():
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #Create a TCPIP socket
 	s.bind(("0.0.0.0", 8787)) #Bind to all interfaces on port 8787
 	s.listen(100) #Accept a maximum of 100 connection simultaneously
-	while True:	    	
+	while True:			
 		c = s.accept()	#Accept a new connection
 		thread.start_new_thread( setDataWithGPS, (c,)) #"Bind" to a GPS
 		
@@ -31,8 +31,8 @@ class RequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 		print "CALLED!";
 		global dataObj
 		self.send_response(200)
-            	self.send_header('Content-type','text/html')
-           	self.end_headers()
+		self.send_header('Content-type','text/javascript')
+		self.end_headers()
 		self.wfile.write(dataObj.data)
 
 
