@@ -59,7 +59,7 @@ def setLatLong():
      			report = session.next(); #Grab the next GPS message, if it has the correct data, write it to a global var
     			if report['class'] == 'TPV':
 				if hasattr(report, 'lat') and hasattr(report, 'lon'):
-					dataObj.data =  "require('update')([" + repr(report.lat) + ", " + repr(report.lon) + ']};';
+					dataObj.data =  "require('update')([" + repr(report.lat) + ", " + repr(report.lon) + "]);";
 		except KeyError: #If no message exisists in queue, wait
     			pass
 		
