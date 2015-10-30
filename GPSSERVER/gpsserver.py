@@ -22,9 +22,11 @@ def connectToServer():
 		try:
 			s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 			s.bind(("0.0.0.0", 63467)) #Bind to all interfaces on port 8787
+			print "About to connect to server. Server ip is " + (SERVER_IP or "undefined")
 			s.connect((SERVER_IP, 8787));
 			validConnec(s);
-		except socket.error:
+		except socket.error as e:
+			print e
 			s.close();
 			time.sleep(5)
 
