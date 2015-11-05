@@ -1,0 +1,15 @@
+#!/bin/sh
+
+##############################################
+# Starts the GPS Server when system boots
+#
+# Copy the file to /usr/bin, then in terminal:
+# `sudo chmod +x /usr/bin/startgps`
+# `crontab -e`
+# Then, add: `@reboot startgps &` to the file
+##############################################
+
+sudo killall screen
+echo "Server starting in 10 seconds"
+sleep 10
+cd ~/bus-tracker-backend/GPSSERVER && screen -d -m python gpsserver.py
