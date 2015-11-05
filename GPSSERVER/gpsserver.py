@@ -14,7 +14,7 @@ SERVER_IP="10.3.108.10"
 USE_CRYPT= False;
 
 class Data:
-	data = "NOTSET"
+	data = FORMAT
 
 def connectToServer():	
 	global dataObj	
@@ -22,7 +22,7 @@ def connectToServer():
 		try:
 			s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 			s.bind(("0.0.0.0", 63467)) #Bind to all interfaces on port 8787
-			print "About to connect to server. Server ip is " + (SERVER_IP or "undefined")
+			print "Connecting to server " + (SERVER_IP or "'undefined'")
 			s.connect((SERVER_IP, 8787));
 			validConnec(s);
 		except socket.error as e:
@@ -61,7 +61,7 @@ def setLatLong():
      			report = session.next(); #Grab the next GPS message, if it has the correct data, write it to a global var
     			if report['class'] == 'TPV':
 				if hasattr(report, 'lat') and hasattr(report, 'lon'):
-					dataObj.data =  "require('update')([" + repr(report.lat) + ", " + repr(report.lon) + "]);";
+					dataObj.data =  "require('update')([" + repr(report.lat) + "," + repr(report.lon) + "]);";
 		except KeyError: #If no message exisists in queue, wait
     			pass
 		
