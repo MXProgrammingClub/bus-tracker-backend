@@ -14,6 +14,7 @@ SERVER_IP="10.3.108.10"
 USE_CRYPT= False;
 
 class Data:
+	global FORMAT
 	data = FORMAT
 
 def connectToServer():	
