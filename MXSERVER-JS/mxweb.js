@@ -3,18 +3,10 @@
 var http = require('http');
 var net = require('net');
 
-// Accepts all interfaces
-var CLIENT_HOST = '0.0.0.0';
-
-// Client port for reception
-var CLIENT_PORT = 8787;
-
-// Server port for requests
-var SERVER_PORT = 8789;
-
-// Default format for server data
-var DEFAULT = "require('update')([null,null]);";
-
+var SERVER_PORT = 8789; // Server port for requests
+var CLIENT_PORT = 8787; // Client port for reception
+var CLIENT_HOST = '0.0.0.0'; // Client host: accepts all interfaces
+var DEFAULT = "require('update')([null,null]);"; // Default format for server data
 
 // HTTP server for outgoing data
 var httpServer = http.createServer(httpCallback).listen(SERVER_PORT);
@@ -25,30 +17,30 @@ var tcpServer = net.createServer(socketCallback).listen(CLIENT_PORT, CLIENT_HOST
 // GPSResponse object to handle responses from TCP server
 var gps = new GPSResponse();
 
-
 /**
  * Handles HTTP Server callback
  * Displays GPSResponse data
  */
 function httpCallback (request, response) {
+	// Regular Expression to test the match of request url
+	var format = new RegExp(/^\/zebra(\?*\w*\=*)*$/);
+
 	// Allows request to directory `/zebra`
 	// Ignores all other requests
-	if (request.url === '/zebra') {
-		console.log('GET' + request.connection.remoteAddress + ' ' + request.url);
+	if (format.test(request.url)) {
+		log(request, response);
 		response.writeHead(200, { "content-type": "text/javascript" });
 		response.writeContinue();
 		response.write(gps.response);
 		response.end();
-	} else response.end();
-	
+	}
 }
 
 /**
  * Handles TCP Server callback
  * @param {net.Socket|Object} socket Connection host
  *
- * @description Sets GPSResponse data under different events
- *
+ * @description Sets GPSResponse data under different events:
  * `connect`
  *		Resumes connection
  * `data`
@@ -65,10 +57,8 @@ function httpCallback (request, response) {
  * `timeout`
  *		Determines when GPS Server is disconnected abnormally,
  *			then pauses the connection
- *		Sets GPSResponse data to `DEFAULT`
- *		
+ *		Sets GPSResponse data to `DEFAULT`	
  */
-
 function socketCallback (socket) {
 	// Sets socket time out to 30 seconds
 	// **************************************
@@ -110,4 +100,18 @@ function GPSResponse () {
 	this.set = function (arg) {
 		this.response = arg;
 	};
+}
+
+/**
+ * Logs HTTP request and response in console
+ *
+ * @param {Object} request http.IncomingMessage request
+ * @param {Object} response http.ServerResponse response
+ */
+function log (request, response) {
+	// Creates UTC date/time without day of the week
+	var date = '[' + new Date().toUTCString().substring(5) + ']';
+
+	console.log(request.connection.remoteAddress +
+		' -- ' + date + ' ' + request.method + ' "' + request.url + '": 200');
 }
