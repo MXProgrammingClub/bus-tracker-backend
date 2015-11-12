@@ -1,4 +1,4 @@
-#!/bin/sh
+#!bin/sh
 
 ##############################################
 # Starts the GPS Server when system boots
