@@ -23,13 +23,13 @@ var gps = new GPSResponse();
  */
 function httpCallback (request, response) {
 	// Regular Expression to test the match of request url
-	var format = new RegExp(/^\/zebra(\?*\w*\=*)*$/);
+	var format = /^\/zebra(\?\_\=\d+)?$/;
 
 	// Allows request to directory `/zebra`
 	// Ignores all other requests
 	if (format.test(request.url)) {
 		log(request, response);
-		response.writeHead(200, { "content-type": "text/javascript" });
+		response.writeHead(200, { "Content-Type": "text/javascript" });
 		response.writeContinue();
 		response.write(gps.response);
 		response.end();
@@ -68,12 +68,12 @@ function socketCallback (socket) {
 	
 	socket.on('connect', function () {
 		console.log('GPS Server Connected');
-		try { socket.resume(); } catch (e) {}
+		try { socket.resume(); } catch (e) { console.log(e); }
 	}).on('data', function (data) {
 		gps.set(data.toString());
 		console.log(gps.response);
 	}).on('error', function (e) {
-		console.log('Error: ' + e.message);
+		console.log('GPS Server Error: ' + e.message);
 		gps.set(DEFAULT);
 	}).on('end', function () {
 		console.log('GPS Server Disconnected');
@@ -91,18 +91,6 @@ function socketCallback (socket) {
 }
 
 /**
- * Handles responses sent by GPS Server
- *
- * @constructor GPSResponse
- */
-function GPSResponse () {
-	this.response = DEFAULT;
-	this.set = function (arg) {
-		this.response = arg;
-	};
-}
-
-/**
  * Logs HTTP request and response in console
  *
  * @param {Object} request http.IncomingMessage request
@@ -114,4 +102,16 @@ function log (request, response) {
 
 	console.log(request.connection.remoteAddress +
 		' -- ' + date + ' ' + request.method + ' "' + request.url + '": 200');
+}
+
+/**
+ * Handles responses sent by GPS Server
+ *
+ * @constructor GPSResponse
+ */
+function GPSResponse () {
+	this.response = DEFAULT;
+	this.set = function (arg) {
+		this.response = arg;
+	};
 }
