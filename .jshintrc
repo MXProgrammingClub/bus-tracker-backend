@@ -1,0 +1,25 @@
+{
+	"globals": {
+		"require": true, 
+		"console": true
+	},
+	"laxcomma": false,
+	"laxbreak": false,
+	"eqnull": true,
+	"smarttabs": true,
+	"globalstrict": true,
+	"jquery": false,
+	"curly": false,
+	"browser": false,
+	"expr": true,
+	"devel": true,
+	"debug": true,
+	"funcscope": true,
+	"unused": false,
+	"bitwise": true,
+	"boss": true,
+	"-W079": false,
+	"-W058": false,
+	"-W002": false,
+	"-W004": false
+}
