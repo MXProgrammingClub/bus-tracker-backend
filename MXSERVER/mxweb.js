@@ -3,7 +3,7 @@
 var http = require('http');
 var net = require('net');
 
-var SERVER_PORT = 8789; // Server port for requests
+var SERVER_PORT = 8080; // Server port for requests
 var CLIENT_PORT = 8787; // Client port for reception
 var CLIENT_HOST = '0.0.0.0'; // Client host: accepts all interfaces
 var DEFAULT = "require('update')([null,null]);"; // Default format for server data
