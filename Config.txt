@@ -1,2 +1,0 @@
-https://github.com/raspberrypi/firmware/commit/56d5a7bca477e0297d94aace43320c38df985015
-http://wes.skeweredrook.com/raspberry-pi-att-beam/

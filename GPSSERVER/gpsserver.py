@@ -10,7 +10,7 @@ FORMAT="require('update')([null,null]);";
 RANDOM_SEED="TEST"
 NEXT="NEW"
 KILL="KIL"
-SERVER_IP="10.3.108.10"
+SERVER_IP="bustracker.mxschool.edu"
 USE_CRYPT= False;
 
 class Data:
