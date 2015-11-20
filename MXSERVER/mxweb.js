@@ -60,48 +60,51 @@ function httpCallback (request, response) {
  *		Sets GPSResponse data to `DEFAULT`	
  */
 function socketCallback (socket) {
-	// Sets socket time out to 30 seconds
-	// **************************************
+	// Sets socket time out to 10 seconds
+	// --------------------------------------
 	// If there is no activity before timeout,
-	// consider GPS Server timeout
-	socket.setTimeout(30000);
+	// then GPS Server times out
+	socket.setTimeout(10000);
 	
 	socket.on('connect', function () {
-		console.log('GPS Server Connected');
-		try { socket.resume(); } catch (e) { console.log(e); }
+		try {
+			socket.resume();
+		} catch (e) { console.log(e); }
 	}).on('data', function (data) {
 		gps.set(data.toString());
 		console.log(gps.response);
 	}).on('error', function (e) {
-		console.log('GPS Server Error: ' + e.message);
-		gps.set(DEFAULT);
+		log('GPS Server Error: ' + e.message);
 	}).on('end', function () {
-		console.log('GPS Server Disconnected');
+		log('GPS Server Disconnected');
 		socket.pause();
-		gps.set(DEFAULT);
 	}).on('close', function () {
-		console.log('GPS Server Connection Closed');
+		log('GPS Server Connection Closed');
 		socket.pause();
-		gps.set(DEFAULT);
 	}).on('timeout', function () {
-		console.log('GPS Server Timed Out');
+		log('GPS Server Timed Out');
 		socket.pause();
-		gps.set(DEFAULT);
 	});
 }
 
 /**
- * Logs HTTP request and response in console
+ * Logs information in the console
  *
- * @param {Object} request http.IncomingMessage request
- * @param {Object} response http.ServerResponse response
+ * @param {Object|String} request HTTP request or log string
+ * @param {Object} <optional> response HTTP response
  */
 function log (request, response) {
 	// Creates UTC date/time without day of the week
-	var date = '[' + new Date().toUTCString().substring(5) + ']';
-
-	console.log(request.connection.remoteAddress +
-		' -- ' + date + ' ' + request.method + ' "' + request.url + '": 200');
+	var date = '[' + new Date().toUTCString().substring(5) + '] ';
+	
+	// Logs special message string and sets gps response to default
+	if (arguments.length !== 2) {
+		console.log(date + arguments[0]);
+		gps.set(DEFAULT);
+	} else { // Logs http request and response
+		console.log(request.connection.remoteAddress +
+		' -- ' + date + request.method + ' "' + request.url + '": 200');
+	}
 }
 
 /**
