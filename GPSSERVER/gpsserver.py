@@ -1,74 +1,65 @@
-#RUN WITH PYTHON 2.7
+# RUN WITH PYTHON 2.7
 import os
 import gps
-import socket     
-import random
+import socket
 import time
 import thread
 
-FORMAT="require('update')([null,null]);";
-RANDOM_SEED="TEST"
-NEXT="NEW"
-KILL="KIL"
-SERVER_IP="bustracker.mxschool.edu"
-USE_CRYPT= False;
+DEFAULT = "require('update')([null,null]);" # Default format for data
+SERVER = "bustracker.mxschool.edu" # Server address for connection
 
+# --------------------------
+# Data class for output data
 class Data:
-	global FORMAT
-	data = FORMAT
+	data = DEFAULT
 
-def connectToServer():	
+# -----------------------------------
+# Connects to the server via a socket
+def connect_to_server():	
 	global dataObj	
 	while True:
 		try:
-			s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-			s.bind(("0.0.0.0", 63467)) #Bind to all interfaces on port 8787
-			print "Connecting to server " + (SERVER_IP or "'undefined'")
-			s.connect((SERVER_IP, 8787));
-			validConnec(s);
+			s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Creates a socket
+			s.bind(("0.0.0.0", 63467)) # Binds to all interfaces on port 63467
+
+			print "Connecting to server " + (SERVER or "'undefined'")
+			s.connect((SERVER, 8787)) # Connects to server on port 8787
+			send_data(s)
 		except socket.error as e:
 			print e
-			s.close();
+			s.close()
 			time.sleep(5)
 
-def validConnec(s):
-	global dataObj;
+# -------------------------------------
+# Sends data to the server via a socket
+# @param s The socket for data sending
+def send_data(s):
+	global dataObj
 	while True:
-		print dataObj.data;		
-		if(USE_CRYPT):
-			s.send(Encrypt(dataObj.data))
-		else:
-			s.send(dataObj.data);
-		time.sleep(5)
-def Encrypt(data):
-	global RANDOM_SEED;
-	random.seed(RANDOM_SEED);
-	
-	crypt = "";
+		print dataObj.data
+		s.send(dataObj.data)
+		time.sleep(2) # Pauses for 2 seconds
 
-	for x in range(0, len(data)):
-		seed = random.randint(0,100);
-		crypt += "" + chr(ord(data[x])+ seed)	
-	return crypt;
+# ------------------------------------------
+# Determines latitude and longetude from gps
+def set_lat_lon():	 
+	global dataObj
 
-def setLatLong():     
-	global dataObj;
-	# Listen on port 2947 (gpsd) of localhost
-	session = gps.gps("localhost", "2947") #Connect to gpsd on port 2947
-        session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE);
-	dataObj.data = FORMAT;
-	while True:	#Constantly update global var with Lat/Long
+	# Listens on port 2947 (gpsd) of localhost
+	session = gps.gps("localhost", "2947") # Connect to gpsd on port 2947
+	session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)
+	dataObj.data = DEFAULT
+	while True:	# Constantly updates global var with Lat/Lon
    		try:
-     			report = session.next(); #Grab the next GPS message, if it has the correct data, write it to a global var
-    			if report['class'] == 'TPV':
-				if hasattr(report, 'lat') and hasattr(report, 'lon'):
-					dataObj.data =  "require('update')([" + repr(report.lat) + "," + repr(report.lon) + "]);";
-		except KeyError: #If no message exisists in queue, wait
-    			pass
-		
-os.system("sudo killall gpsd")	#kill previous instances of gpsd
-os.system("sudo gpsd /dev/ttyUSB0 -F /var/run/gpsd.sock") #Start gpsd listening to /var/ttyUSB0
+	 		report = session.next() # Grabs the next GPS message; if it has the correct data, write it to a global var
+			if report['class'] == 'TPV':
+				dataObj.data =  "require('update')([" + repr(report.lat) + "," + repr(report.lon) + "]);"
+		except KeyError: # If no message exists in queue, wait
+			pass
 
-dataObj = Data();
-thread.start_new_thread( setLatLong, ())
-connectToServer()
+os.system("sudo killall gpsd")	# Kills previous instances of gpsd
+os.system("sudo gpsd /dev/ttyUSB0 -F /var/run/gpsd.sock") # Starts gpsd listening to /dev/ttyUSB0
+
+dataObj = Data() # New instance of Data object
+thread.start_new_thread(set_lat_lon, ())
+connect_to_server()
