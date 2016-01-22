@@ -17,21 +17,30 @@ var tcpServer = net.createServer(socketCallback).listen(CLIENT_PORT, CLIENT_HOST
 // GPSResponse object to handle responses from TCP server
 var gps = new GPSResponse();
 
+// GPSStatus object to indicate working status
+var status = new GPSStatus();
+
 /**
  * Handles HTTP Server callback
  * Displays GPSResponse data
  */
 function httpCallback (request, response) {
 	// Regular Expression to test the match of request url
-	var format = /^\/zebra(\?\_\=\d+)?$/;
+	var gpsFormat = /^\/zebra(\?\_\=\d+)?$/;
+	var statusFormat = /^\/status(\?\_\=\d+)?$/;
 
-	// Allows request to directory `/zebra`
+	// Allows request to directory `/zebra` and `/status`
 	// Ignores all other requests
-	if (format.test(request.url)) {
+	if (gpsFormat.test(request.url)) {
 		log(request, response);
 		response.writeHead(200, { "Content-Type": "text/javascript" });
 		response.writeContinue();
 		response.write(gps.response);
+		response.end();
+	} else if (statusFormat.test(request.url)) {
+		response.writeHead(200, { "Content-Type": "text/javascript" });
+		response.writeContinue();
+		response.write(status.text);
 		response.end();
 	}
 }
@@ -67,23 +76,28 @@ function socketCallback (socket) {
 	socket.setTimeout(10000);
 	
 	socket.on('connect', function () {
-		try {
-			socket.resume();
-		} catch (e) { console.log(e); }
+		socket.resume();
+		console.log("GPS Server Connected");
+		status.change(1);
 	}).on('data', function (data) {
 		gps.set(data.toString());
 		console.log(gps.response);
+		status.change(1);
 	}).on('error', function (e) {
 		log('GPS Server Error: ' + e.message);
+		status.change(2);
 	}).on('end', function () {
 		log('GPS Server Disconnected');
 		socket.pause();
+		status.change(0);
 	}).on('close', function () {
 		log('GPS Server Connection Closed');
 		socket.pause();
+		status.change(0);
 	}).on('timeout', function () {
 		log('GPS Server Timed Out');
 		socket.pause();
+		status.change(3);
 	});
 }
 
@@ -104,6 +118,30 @@ function log (request, response) {
 	} else { // Logs http request and response
 		console.log(request.connection.remoteAddress +
 		' -- ' + date + request.method + ' "' + request.url + '": 200');
+	}
+}
+
+/**
+ * Handles GPS Status requests
+ *
+ * @constructor GPSStatus
+ */
+function GPSStatus () {
+	var str = ["Disonnected", "Connected", "Error", "Timeout"];
+	
+	/**
+	 * Status text
+	 */
+	this.text = str[0];
+	
+	/**
+	 * Change the status text
+	 *
+	 * @param {Number} index in arry `str`
+	 */
+	this.change = function (index) {
+		if (index >= 4 || index < 0) throw new Error("Invalid");
+		else this.text = str[index];
 	}
 }
 
