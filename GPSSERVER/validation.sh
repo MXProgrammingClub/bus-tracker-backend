@@ -12,7 +12,6 @@ get_status(){
 # Validates GPS status every second. 
 # Restart if gps is not connected
 validate(){
-	sleep 10 # Wait for initial boot
 	get_status
 	if [ $status == $success ]
 	then
@@ -28,6 +27,8 @@ validate(){
 	fi
 
 }
+
+sleep 10 # Wait for initial boot
 
 # Executes function validate()
 while (true) 
