@@ -13,3 +13,4 @@ sudo killall screen
 echo "Server starting in 10 seconds"
 sleep 10
 cd ~/bus-tracker-backend/GPSSERVER && screen -d -m python gpsserver.py
+cd ~/bus-tracker-backend/GPSSERVER && screen -d -m sh validation.sh
