@@ -80,9 +80,15 @@ function socketCallback (socket) {
 		console.log("GPS Server Connected");
 		status.change(1);
 	}).on('data', function (data) {
-		gps.set(data.toString());
-		console.log(gps.response);
-		status.change(1);
+		data = data.toString();
+		if (data !== DEFAULT) {
+			gps.set(data);
+			console.log(gps.response);
+			status.change(1);
+		} else {
+			log('GPS Error: No Signal');
+			status.change(2);
+		}
 	}).on('error', function (e) {
 		log('GPS Server Error: ' + e.message);
 		status.change(2);
@@ -140,7 +146,7 @@ function GPSStatus () {
 	 * @param {Number} index in arry `str`
 	 */
 	this.change = function (index) {
-		if (index >= 4 || index < 0) throw new Error("Invalid");
+		if (!index || index >= 4 || index < 0) throw new Error("Invalid");
 		else this.text = str[index];
 	}
 }
