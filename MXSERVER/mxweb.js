@@ -2,11 +2,15 @@
 
 var http = require('http');
 var net = require('net');
+var GPSResponse = require('./gps').Response;
+var GPSStatus = require('./gps').Status;
+// TODO
+// var dataAuth = require('./data-auth');
 
 var SERVER_PORT = 8080; // Server port for requests
 var CLIENT_PORT = 8787; // Client port for reception
 var CLIENT_HOST = '0.0.0.0'; // Client host: accepts all interfaces
-var DEFAULT = "require('update')([null,null]);"; // Default format for server data
+var DEFAULT = require('./gps').DEFAULT;
 
 // HTTP server for outgoing data
 var httpServer = http.createServer(httpCallback).listen(SERVER_PORT);
@@ -76,9 +80,19 @@ function socketCallback (socket) {
 	socket.setTimeout(10000);
 	
 	socket.on('connect', function () {
-		socket.resume();
-		console.log("GPS Server Connected");
-		status.change(1);
+		var error;
+		try {
+			socket.resume();
+		} catch (e) {
+			error = e;
+		} finally {
+			if (!error) {
+				console.log('GPS Server Connected');
+				status.change(1);
+			} else {
+				status.change(2);
+			}
+		}
 	}).on('data', function (data) {
 		data = data.toString();
 		if (data !== DEFAULT) {
@@ -125,40 +139,4 @@ function log (request, response) {
 		console.log(request.connection.remoteAddress +
 		' -- ' + date + request.method + ' "' + request.url + '": 200');
 	}
-}
-
-/**
- * Handles GPS Status requests
- *
- * @constructor GPSStatus
- */
-function GPSStatus () {
-	var str = ["Disonnected", "Connected", "Error", "Timeout"];
-	
-	/**
-	 * Status text
-	 */
-	this.text = str[0];
-	
-	/**
-	 * Change the status text
-	 *
-	 * @param {Number} index in arry `str`
-	 */
-	this.change = function (index) {
-		if (!index || index >= 4 || index < 0) throw new Error("Invalid");
-		else this.text = str[index];
-	}
-}
-
-/**
- * Handles responses sent by GPS Server
- *
- * @constructor GPSResponse
- */
-function GPSResponse () {
-	this.response = DEFAULT;
-	this.set = function (arg) {
-		this.response = arg;
-	};
 }
