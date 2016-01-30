@@ -2,7 +2,7 @@
 
 module.exports = {
 	// Default GPS data
-	DEFAULT: "require('update')([null,null])",
+	DEFAULT: "require('update')([null,null]);",
 
 	/**
 	 * Handles GPS Status requests
