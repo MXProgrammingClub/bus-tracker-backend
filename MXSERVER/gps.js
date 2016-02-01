@@ -21,7 +21,7 @@ module.exports = {
 		 * @param {Number} index in array `str`
 		 */
 		this.change = function (index) {
-			if (!index || index >= 4 || index < 0) throw new Error("Invalid");
+			if (!index || index >= 4 || index < 0) console.log("Invalid");
 			else this.text = str[index];
 		}
 	},
