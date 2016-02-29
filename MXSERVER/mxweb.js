@@ -4,8 +4,6 @@ var http = require('http');
 var net = require('net');
 var GPSResponse = require('./gps').Response;
 var GPSStatus = require('./gps').Status;
-// TODO
-// var dataAuth = require('./data-auth');
 
 var SERVER_PORT = 8080; // Server port for requests
 var CLIENT_PORT = 8787; // Client port for reception
@@ -96,9 +94,14 @@ function socketCallback (socket) {
 	}).on('data', function (data) {
 		data = data.toString();
 		if (data !== DEFAULT) {
-			gps.set(data);
-			console.log(gps.response);
-			status.change(1);
+			if (!require('./data-auth')(data)) { // Data fails 
+				log('GPS Error: GPS Freezes');
+				status.change(2);
+			} else {
+				gps.set(data);
+				console.log(gps.response);
+				status.change(1);
+			}
 		} else {
 			log('GPS Error: No Signal');
 			status.change(2);
