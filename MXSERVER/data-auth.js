@@ -33,15 +33,22 @@ function dataAuth (data) {
 function isSame () {
 	if (arr.length < MAX_LENGTH) return false;
 	else {
-		var sameCount = 0;
-		var base = arr[0];
-		arr.forEach(function (coord) {
-			if (coord[0] === base[0] && coord[1] === base[1]) sameCount++;
-		});
-		
-		if (sameCount === MAX_LENGTH) return true;
-		else return false;
+		for (var i = 0; i < arr.length - 1; i++) { 
+			// Loops through each element. Compares one element to the next one.
+			if (arr[i][0] !== arr[i+1][0] || arr[i][1] !== arr[i+1][1]) return false;
+			else {
+				arr = []; // Clears all array entries
+				return true;
+			}
+		}
 	}
 }
 
-module.exports = dataAuth;
+function clearArray () {
+	arr = [];
+}
+
+module.exports = {
+	authenticate: dataAuth,
+	clearArray: clearArray
+};
