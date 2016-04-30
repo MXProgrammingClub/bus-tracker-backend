@@ -48,7 +48,4 @@ function clearArray () {
 	arr = [];
 }
 
-module.exports = {
-	authenticate: dataAuth,
-	clearArray: clearArray
-};
+module.exports = dataAuth;
