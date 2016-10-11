@@ -68,7 +68,7 @@ function httpCallback (request, response) {
  * `timeout`
  *		Determines when GPS Server is disconnected abnormally,
  *			then pauses the connection
- *		Sets GPSResponse data to `DEFAULT`	
+ *		Sets GPSResponse data to `DEFAULT`
  */
 function socketCallback (socket) {
 	// Sets socket time out to 10 seconds
@@ -76,7 +76,7 @@ function socketCallback (socket) {
 	// If there is no activity before timeout,
 	// then GPS Server times out
 	socket.setTimeout(10000);
-	
+
 	socket.on('connect', function () {
 		var error;
 		try {
@@ -94,14 +94,14 @@ function socketCallback (socket) {
 	}).on('data', function (data) {
 		data = data.toString();
 		if (data !== DEFAULT) {
-			if (!require('./data-auth')(data)) { // Data fails 
-				log('GPS Error: GPS Freezes');
-				status.change(2);
-			} else {
+			// if (!require('./data-auth')(data)) { // Data fails
+			// 	log('GPS Error: GPS Freezes');
+			// 	status.change(2);
+			// } else {
 				gps.set(data);
 				console.log(gps.response);
 				status.change(1);
-			}
+			// }
 		} else {
 			log('GPS Error: No Signal');
 			status.change(2);
@@ -133,7 +133,7 @@ function socketCallback (socket) {
 function log (request, response) {
 	// Creates UTC date/time without day of the week
 	var date = '[' + new Date().toUTCString().substring(5) + '] ';
-	
+
 	// Logs special message string and sets gps response to default
 	if (arguments.length !== 2) {
 		console.log(date + arguments[0]);
